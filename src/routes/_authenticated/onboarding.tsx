@@ -12,6 +12,13 @@ import { EcoMark } from "@/components/app-shell";
 import { supabase } from "@/integrations/supabase/client";
 import { useProfile, useSession } from "@/hooks/use-ecopoints";
 import { cn } from "@/lib/utils";
+import {
+  digitsOnly,
+  lettersOnly,
+  nameError,
+  phoneError,
+  scholarError,
+} from "@/lib/validation";
 
 export const Route = createFileRoute("/_authenticated/onboarding")({
   head: () => ({
@@ -59,10 +66,22 @@ function Onboarding() {
     if (profile?.onboarded) navigate({ to: "/dashboard", replace: true });
   }, [profile?.onboarded, navigate]);
 
+  const fullNameErr = fullName ? nameError(fullName, "Your name") : null;
+  const phoneErr = phone ? phoneError(phone) : null;
+  const childNameErr = childName ? nameError(childName, "Child's name") : null;
+  const scholarErr = scholarNumber ? scholarError(scholarNumber) : null;
+
   function next() {
-    if (step === 0 && (!fullName.trim() || !phone.trim() || !homeAddress.trim())) {
-      toast.error("Please fill in your name, phone and home address.");
-      return;
+    if (step === 0) {
+      const err = nameError(fullName, "Your name") ?? phoneError(phone);
+      if (err) {
+        toast.error(err);
+        return;
+      }
+      if (!homeAddress.trim()) {
+        toast.error("Please add your home address.");
+        return;
+      }
     }
     if (step === 1 && !vehicleNumber.trim()) {
       toast.error("Please add your vehicle number.");
@@ -72,8 +91,9 @@ function Onboarding() {
   }
 
   async function finish() {
-    if (!childName.trim() || !scholarNumber.trim()) {
-      toast.error("Add your child's name and scholar number.");
+    const err = nameError(childName, "Child's name") ?? scholarError(scholarNumber);
+    if (err) {
+      toast.error(err);
       return;
     }
     if (!user) return;
@@ -270,11 +290,20 @@ function Onboarding() {
   );
 }
 
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+function Field({
+  label,
+  children,
+  error,
+}: {
+  label: string;
+  children: React.ReactNode;
+  error?: string | null;
+}) {
   return (
     <div className="space-y-2">
       <Label>{label}</Label>
       {children}
+      {error ? <p className="text-sm text-destructive">{error}</p> : null}
     </div>
   );
 }

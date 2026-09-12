@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Leaf, Loader2, Mail } from "lucide-react";
+import { Leaf, Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -34,7 +34,7 @@ function AuthPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
-  const [sentTo, setSentTo] = useState<string | null>(null);
+  
 
   useEffect(() => {
     if (ready && session) navigate({ to: "/dashboard", replace: true });
@@ -52,12 +52,14 @@ function AuthPage() {
         const { data, error } = await supabase.auth.signUp({
           email: email.trim(),
           password,
-          options: { emailRedirectTo: window.location.origin },
         });
         if (error) throw error;
         if (!data.session) {
-          setSentTo(email.trim());
-          return;
+          const { error: signInError } = await supabase.auth.signInWithPassword({
+            email: email.trim(),
+            password,
+          });
+          if (signInError) throw signInError;
         }
         navigate({ to: "/onboarding", replace: true });
       } else {
@@ -97,27 +99,7 @@ function AuthPage() {
           <span className="text-display text-xl font-semibold">EcoPoints</span>
         </Link>
 
-        {sentTo ? (
-          <div className="rounded-3xl border border-border bg-card p-8 text-center shadow-lift">
-            <Mail className="mx-auto size-8 text-leaf" />
-            <h1 className="text-display mt-4 text-2xl font-semibold">Confirm your email</h1>
-            <p className="mt-2 text-sm text-muted-foreground">
-              We sent a confirmation link to <span className="font-medium">{sentTo}</span>. Open it,
-              then come back here to set up your carpool profile.
-            </p>
-            <Button
-              variant="outline"
-              className="mt-6 w-full"
-              onClick={() => {
-                setSentTo(null);
-                setMode("signin");
-              }}
-            >
-              Back to sign in
-            </Button>
-          </div>
-        ) : (
-          <div className="rounded-3xl border border-border bg-card p-8 shadow-lift">
+        <div className="rounded-3xl border border-border bg-card p-8 shadow-lift">
             <h1 className="text-display text-2xl font-semibold">
               {mode === "signup" ? "Create your parent account" : "Welcome back"}
             </h1>
@@ -179,8 +161,7 @@ function AuthPage() {
                 {mode === "signup" ? "Sign in" : "Create an account"}
               </button>
             </p>
-          </div>
-        )}
+        </div>
       </div>
     </div>
   );
