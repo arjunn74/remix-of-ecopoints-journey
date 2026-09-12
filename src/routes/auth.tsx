@@ -52,12 +52,14 @@ function AuthPage() {
         const { data, error } = await supabase.auth.signUp({
           email: email.trim(),
           password,
-          options: { emailRedirectTo: window.location.origin },
         });
         if (error) throw error;
         if (!data.session) {
-          setSentTo(email.trim());
-          return;
+          const { error: signInError } = await supabase.auth.signInWithPassword({
+            email: email.trim(),
+            password,
+          });
+          if (signInError) throw signInError;
         }
         navigate({ to: "/onboarding", replace: true });
       } else {
