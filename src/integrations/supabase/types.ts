@@ -65,6 +65,33 @@ export type Database = {
         }
         Relationships: []
       }
+      demo_leaderboard: {
+        Row: {
+          children_helped: number
+          created_at: string
+          full_name: string
+          id: string
+          is_ev: boolean
+          total_points: number
+        }
+        Insert: {
+          children_helped?: number
+          created_at?: string
+          full_name: string
+          id?: string
+          is_ev?: boolean
+          total_points?: number
+        }
+        Update: {
+          children_helped?: number
+          created_at?: string
+          full_name?: string
+          id?: string
+          is_ev?: boolean
+          total_points?: number
+        }
+        Relationships: []
+      }
       pickup_logs: {
         Row: {
           child_id: string | null
