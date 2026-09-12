@@ -290,11 +290,20 @@ function Onboarding() {
   );
 }
 
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+function Field({
+  label,
+  children,
+  error,
+}: {
+  label: string;
+  children: React.ReactNode;
+  error?: string | null;
+}) {
   return (
     <div className="space-y-2">
       <Label>{label}</Label>
       {children}
+      {error ? <p className="text-sm text-destructive">{error}</p> : null}
     </div>
   );
 }
