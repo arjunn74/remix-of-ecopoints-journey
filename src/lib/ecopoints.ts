@@ -12,33 +12,39 @@ export type Milestone = {
 
 export const MILESTONES: Milestone[] = [
   {
-    points: 10000,
+    points: 3000,
+    tier: "First Ride",
+    reward: "Welcome badge on your parent profile",
+    blurb: "Your very first shared school run.",
+  },
+  {
+    points: 8000,
+    tier: "Seedling",
+    reward: "Your family's name on the school Green Board that week",
+    blurb: "A few quieter mornings already add up.",
+  },
+  {
+    points: 20000,
     tier: "Sapling",
-    reward: "Digital eco-badge + name on the school noticeboard",
-    blurb: "Your first stretch of quieter mornings.",
-  },
-  {
-    points: 25000,
-    tier: "Sprout",
-    reward: "Priority parking slot for a month",
-    blurb: "Skip the queue you helped shorten.",
-  },
-  {
-    points: 50000,
-    tier: "Grove Keeper",
-    reward: "A tree planted on campus in your ward's name",
+    reward: "A sapling planted on campus in your ward's name",
     blurb: "Something that keeps growing after drop-off.",
   },
   {
-    points: 100000,
+    points: 45000,
+    tier: "Grove Keeper",
+    reward: "Reserved priority parking slot for a month",
+    blurb: "Skip the queue you helped shorten.",
+  },
+  {
+    points: 90000,
     tier: "Canopy Guardian",
-    reward: "Certificate at assembly + reserved pickup lane",
+    reward: "Certificate at morning assembly + reserved pickup lane",
     blurb: "Recognised in front of the whole school.",
   },
   {
-    points: 200000,
-    tier: "Forest Champion",
-    reward: "Annual Green Family award + newsletter feature",
+    points: 175000,
+    tier: "Green Family of the Year",
+    reward: "Family award + feature in the school newsletter",
     blurb: "The highest honour on the carpool board.",
   },
 ];
